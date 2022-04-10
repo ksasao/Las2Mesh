@@ -4,6 +4,8 @@
 
 ## ダウンロード
 
+- [v0.1](https://github.com/ksasao/Las2Mesh/releases/download/v0.1/las2mesh_v0.1.zip) (2022/04/10)
+
 ## 利用方法
 
 las2mesh.exe に 点群ファイル(.las) を Drag&Drop してください。複数まとめて Drag&Drop すると1つの3Dモデルとして出力されます。デフォルトのファイル名は output.ply です。
