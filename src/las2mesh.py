@@ -62,6 +62,7 @@ def create_mesh(point_cloud, mesh_depth):
     return mesh
 
 def main():
+    print(las2mesh_version)
     parser = argparse.ArgumentParser(description='.lasファイルからメッシュを生成します') 
     parser.add_argument('files', help='対象の .lasファイル。複数指定できます。', nargs='*')
     parser.add_argument('-d','--depth',default=10, type=int, help='メッシュの細かさを整数で指定します。デフォルト値は 10 です。')
