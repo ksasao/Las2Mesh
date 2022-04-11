@@ -32,7 +32,8 @@ def load_files(files):
     min = np.amin(vec, axis=0)
     max = np.amax(vec, axis=0)
     vec = vec - min
-    print("size(m): " + str([max-min]))
+    bbox = max-min
+    print(f"size: {bbox[0]:.1f} x {bbox[1]:.1f} x {bbox[2]:.1f} (m)")
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(vec)
     pcd.colors = o3d.utility.Vector3dVector(col)
@@ -63,7 +64,7 @@ def create_mesh(point_cloud, mesh_depth):
 def main():
     parser = argparse.ArgumentParser(description='.lasファイルからメッシュを生成します') 
     parser.add_argument('files', help='対象の .lasファイル。複数指定できます。', nargs='*')
-    parser.add_argument('-d','--depth',default=9, type=int, help='メッシュの細かさを整数で指定します。デフォルト値は 9 です。')
+    parser.add_argument('-d','--depth',default=10, type=int, help='メッシュの細かさを整数で指定します。デフォルト値は 10 です。')
     parser.add_argument('-o','--output',default='output.ply', help='出力ファイル名を指定します。デフォルト値は output.ply です。出力形式は、.ply, .stl, .obj, .off, .gltf に対応しています。')
     parser.add_argument('-n','--nopreview', action='store_true', help='3Dプレビュー表示を無効にします')
     args = parser.parse_args()
