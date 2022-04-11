@@ -4,7 +4,8 @@
 
 ## ダウンロード
 
-- [v0.1](https://github.com/ksasao/Las2Mesh/releases/download/v0.1/las2mesh_v0.1.zip) (2022/04/10)
+- [v0.2](https://github.com/ksasao/Las2Mesh/releases/download/v0.2/las2mesh_v0.2.zip) (2022/04/11)
+- [過去のバージョン](https://github.com/ksasao/Las2Mesh/releases)
 
 ## 利用方法
 
