@@ -17,7 +17,8 @@ las2mesh.exe に 点群ファイル(.las) を Drag&Drop してください。複
 ### オプション
 
 ```txt
-usage: las2mesh.exe [-h] [-d DEPTH] [-o OUTPUT] [-n] [files ...]
+Las2Mesh v0.2
+usage: las2mesh.py [-h] [-d DEPTH] [-o OUTPUT] [-n] [files ...]
 
 .lasファイルからメッシュを生成します
 
@@ -27,7 +28,7 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -d DEPTH, --depth DEPTH
-                        メッシュの細かさを整数で指定します。デフォルト値は 9 です。
+                        メッシュの細かさを整数で指定します。デフォルト値は 10 です。
   -o OUTPUT, --output OUTPUT
                         出力ファイル名を指定します。デフォルト値は output.ply です。出力形式は、.ply, .stl, .obj, .off, .gltf に対応しています。
   -n, --nopreview       3Dプレビュー表示を無効にします
