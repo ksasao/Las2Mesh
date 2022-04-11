@@ -1,13 +1,22 @@
+from turtle import up
 import numpy as np
 import open3d as o3d
 import laspy
 import argparse
 
+las2mesh_version = "Las2Mesh v0.2"
+
 # lasファイルから点群を追加する
 def add_points(filename,points,colors):
     las = laspy.read(filename)
-    points = np.vstack([points,np.column_stack([las.points.X,las.points.Y,las.points.Z])/1000.])
-    colors = np.vstack([colors,np.column_stack([las.points.red,las.points.green,las.points.blue])/65535.])
+    scales = las.header.scales
+    points = np.vstack([points,np.column_stack([las.points.X * scales[0], las.points.Y * scales[1], las.points.Z * scales[2]])])
+    if hasattr(las.points,'red'):
+        # カラーあり
+        colors = np.vstack([colors,np.column_stack([las.points.red,las.points.green,las.points.blue])/65535.])
+    else:
+        # カラーなし(グレー表示)
+        colors = np.vstack([colors,np.column_stack([np.full((len(las.X), 3),0.5)])])
     return points,colors
 
 # 複数の .lasファイルを読み込み1つの点群にする
@@ -19,6 +28,11 @@ def load_files(files):
         vec,col = add_points(filename,vec,col)
         print(filename + " => " + str(len(vec)) + " points(total)")
 
+    # 端が原点となるように移動
+    min = np.amin(vec, axis=0)
+    max = np.amax(vec, axis=0)
+    vec = vec - min
+    print("size(m): " + str([max-min]))
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(vec)
     pcd.colors = o3d.utility.Vector3dVector(col)
@@ -28,7 +42,7 @@ def load_files(files):
 def create_mesh(point_cloud, mesh_depth):
     # 法線の推定
     point_cloud.estimate_normals(search_param=o3d.geometry.KDTreeSearchParamKNN(knn=20))
-    point_cloud.orient_normals_to_align_with_direction(orientation_reference=np.array([0., 0., 1.]))
+    point_cloud.orient_normals_to_align_with_direction(orientation_reference=np.array([0., 0., 1.])) # Upの軸を指定する
 
     # メッシュ化
     with o3d.utility.VerbosityContextManager(
@@ -43,14 +57,14 @@ def create_mesh(point_cloud, mesh_depth):
     # メッシュの軽量化
     # decimation_ratio = 0.5
     # count = len(mesh.triangles)
-    # mesh = mesh.simplify_quadric_decimation(int(count * decimation_ratio))
+    #mesh = mesh.simplify_quadric_decimation(int(count * decimation_ratio))
     return mesh
 
 def main():
-    parser = argparse.ArgumentParser(description='.lasファイルからメッシュ(.ply)を生成します') 
+    parser = argparse.ArgumentParser(description='.lasファイルからメッシュを生成します') 
     parser.add_argument('files', help='対象の .lasファイル。複数指定できます。', nargs='*')
     parser.add_argument('-d','--depth',default=9, type=int, help='メッシュの細かさを整数で指定します。デフォルト値は 9 です。')
-    parser.add_argument('-o','--output',default='output.ply', help='出力ファイル名を指定します。デフォルト値は output.ply です。')
+    parser.add_argument('-o','--output',default='output.ply', help='出力ファイル名を指定します。デフォルト値は output.ply です。出力形式は、.ply, .stl, .obj, .off, .gltf に対応しています。')
     parser.add_argument('-n','--nopreview', action='store_true', help='3Dプレビュー表示を無効にします')
     args = parser.parse_args()
 
@@ -64,7 +78,9 @@ def main():
 
     mesh = create_mesh(pcd,depth)
     if not args.nopreview:
-        o3d.visualization.draw_geometries([mesh]) # 画面表示
+        # o3d.visualization.draw(mesh) # 詳細設定用
+        o3d.visualization.draw_geometries([mesh],window_name=las2mesh_version + " - " + output_path + " (preview)") # 画面表示
+        # 操作方法 http://www.open3d.org/docs/latest/tutorial/Basic/visualization.html
     o3d.io.write_triangle_mesh(output_path, mesh,write_ascii=False,write_vertex_normals =True)
 
 if __name__ == '__main__':
