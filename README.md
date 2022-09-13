@@ -66,7 +66,7 @@ Python用ライブラリをインストール
 pip3 install numpy laspy pygltflib
 ```
 
-変換テスト
+変換テスト (Las2Meshをclone後)
 ```
 cd src
 python las2mesh.py test.las -o test.glb
