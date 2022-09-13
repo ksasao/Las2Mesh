@@ -1,4 +1,3 @@
-from tkinter.tix import Tree
 import numpy as np
 import open3d as o3d
 import laspy
