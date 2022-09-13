@@ -1,0 +1,59 @@
+<!DOCTYPE html><html><head>
+<title>glb-viewer</title>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
+<!--
+  <script type="module" src="./drone-controls-mode2.js"></script>
+-->
+<script type="module" src="https://code4fukui.github.io/glb-viewer/mc-controls.js"></script>
+<script type="module">
+help.innerHTML = "操作方法: カーソルで移動、マウスで視点変更、スペースキーで上昇、シフトキーで下降 (<a href=https://code4fukui.github.io/vr-fukui/vr-view.html#img/vr-jomon-museum.jpg>上空360度写真</a>、<a href=https://github.com/code4fukui/vr-jomon-museum>src on GitHub</a>)";
+</script>
+
+<style>
+#help {
+  position: absolute;
+  background-color: white;
+  border: 2px solid black;
+  padding: .3em;
+  color: black;
+  z-index: 30;
+  margin: .5em;
+}
+</style>
+  
+</head>
+
+<body>
+
+<div id="help"></div>
+
+<a-scene id="scene" background="color: #4080e0" renderer="colorManagement: true">
+  <a-assets timeout="10000">
+    <a-asset-item id="base-asset" src="./test_d11.glb"></a-asset-item>
+    <!--<a-asset-item id="arrow-asset" src="./arrow.glb"></a-asset-item>-->
+    <!--<a-asset-item id="cake-asset" src="./kono-guide.glb"></a-asset-item>-->
+  </a-assets>
+  <a-entity id="base" gltf-model="#base-asset" position="0 0 0" scale="1 1 1"></a-entity>
+  <!--
+  <a-entity id="arrow" gltf-model="#arrow-asset" position="-7 20 -45" scale="2 2 2" rotation="0 0 180"
+    animation="property: position; to: -7 14 -45; dur: 500; easing: easeInSine; loop: true; dir: alternate"
+  -->
+  ></a-entity>
+  <!--
+  <a-entity id="cake" gltf-model="#cake-asset" position="-1.1 .48 3" scale="1 1 1"></a-entity>
+  -->
+  <a-entity light="type: ambient; color: #FFF"></a-entity>
+
+    <!--<a-plane color="#888" height="300" width="300" rotation="-90 0 0"></a-plane>-->
+    <!-- <a-sphere id="sphere" color="#f22"></a-sphere> -->
+  <a-entity id="cameraRig" position="0 0 0" rotation="0 0 0">
+    <a-entity id="head" camera position="0 1.7 0" mc-controls look-controls>
+      <a-entity cursor="rayOrigin: mouse"></a-entity>
+    </a-entity>
+    <a-entity oculus-touch-controls="hand:left" teleport-controls="button:trigger; collisionEntities:.collidable; cameraRig:#cameraRig; teleportOrigin:#head;"></a-entity>
+    <a-entity oculus-touch-controls="hand:right" teleport-controls="button:trigger; collisionEntities:.collidable; cameraRig:#cameraRig; teleportOrigin:#head;"></a-entity>
+  </a-entity>
+</a-scene>
+</body>
+</html>
