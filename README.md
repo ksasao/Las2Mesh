@@ -49,12 +49,13 @@ sudo ln -s /opt/homebrew/bin/python3 /opt/homebrew/bin/python
 [Open3D](https://github.com/isl-org/Open3D)をビルドする ([see also](http://www.open3d.org/docs/release/compilation.html))
 ```
 git clone https://github.com/isl-org/Open3D
+cd Open3D
 mkdir build
 cd build
 cmake ..
 
 make -j$(sysctl -n hw.physicalcpu)
-make install
+sudo make install
 make install-pip-package
 make python-package
 make pip-package
