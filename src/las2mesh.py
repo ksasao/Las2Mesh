@@ -1,4 +1,3 @@
-from tkinter.tix import Tree
 import numpy as np
 import open3d as o3d
 import laspy
@@ -64,22 +63,21 @@ def create_mesh(point_cloud, mesh_depth):
     return mesh
 
 def write_mesh(filename, mesh):
-    body,ext = os.path.splitext(filename)
+    body, ext = os.path.splitext(filename)
     if ext == ".glb":
         gltf_file = body + ".gltf"
-        o3d.io.write_triangle_mesh(gltf_file, mesh,write_ascii=False,write_vertex_normals =True)
+        o3d.io.write_triangle_mesh(gltf_file, mesh, write_ascii=False, write_vertex_normals=True)
         gltf2glb(gltf_file, override=True)
         os.remove(gltf_file)
     else:
-        o3d.io.write_triangle_mesh(filename, mesh,write_ascii=False,write_vertex_normals =True)
-
+        o3d.io.write_triangle_mesh(filename, mesh, write_ascii=False, write_vertex_normals=True)
 
 def main():
     print(las2mesh_version)
     parser = argparse.ArgumentParser(description='.lasファイルからメッシュを生成します') 
     parser.add_argument('files', help='対象の .lasファイル。複数指定できます。', nargs='*')
-    parser.add_argument('-d','--depth',default=10, type=int, help='メッシュの細かさを整数で指定します。デフォルト値は 10 です。')
-    parser.add_argument('-o','--output',default='output.ply', help='出力ファイル名を指定します。デフォルト値は output.ply です。出力形式は、.ply, .stl, .obj, .off, .gltf に対応しています。')
+    parser.add_argument('-d','--depth', default=10, type=int, help='メッシュの細かさを整数で指定します。デフォルト値は 10 です。')
+    parser.add_argument('-o','--output', default='output.ply', help='出力ファイル名を指定します。デフォルト値は output.ply です。出力形式は、.ply, .stl, .obj, .off, .gltf に対応しています。')
     parser.add_argument('-n','--nopreview', action='store_true', help='3Dプレビュー表示を無効にします')
     args = parser.parse_args()
 
@@ -91,12 +89,13 @@ def main():
     output_path = args.output
     depth = args.depth
 
-    mesh = create_mesh(pcd,depth)
+    mesh = create_mesh(pcd, depth)
+    write_mesh(output_path, mesh)
+
     if not args.nopreview:
         # o3d.visualization.draw(mesh) # 詳細設定用
-        o3d.visualization.draw_geometries([mesh],window_name=las2mesh_version + " - " + output_path + " (preview)") # 画面表示
+        o3d.visualization.draw_geometries([mesh], window_name=las2mesh_version + " - " + output_path + " (preview)") # 画面表示
         # 操作方法 http://www.open3d.org/docs/latest/tutorial/Basic/visualization.html
-    write_mesh(output_path,mesh)
 
 if __name__ == '__main__':
     main()

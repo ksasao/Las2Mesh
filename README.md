@@ -1,6 +1,6 @@
 # Las2Mesh
 
-点群(.las形式)ファイルを3Dモデルに変換するツールです。出力形式は、.ply, .stl, .obj, .off, .gltf に対応しています。
+点群(.las形式)ファイルを3Dモデルに変換するツールです。出力形式は、.ply, .stl, .obj, .off, .gltf, glb に対応しています。
 
 ## ダウンロード
 
@@ -32,4 +32,42 @@ optional arguments:
   -o OUTPUT, --output OUTPUT
                         出力ファイル名を指定します。デフォルト値は output.ply です。出力形式は、.ply, .stl, .obj, .off, .gltf に対応しています。
   -n, --nopreview       3Dプレビュー表示を無効にします
+```
+
+## M1 Mac用環境設定
+
+Pythonインストール
+```
+brew install python
+```
+
+python コマンドを有効にする
+```
+sudo ln -s /opt/homebrew/bin/python3 /opt/homebrew/bin/python
+```
+
+[Open3D](https://github.com/isl-org/Open3D)をビルドする ([see also](http://www.open3d.org/docs/release/compilation.html))
+```
+git clone https://github.com/isl-org/Open3D
+cd Open3D
+mkdir build
+cd build
+cmake ..
+
+make -j$(sysctl -n hw.physicalcpu)
+sudo make install
+make install-pip-package
+make python-package
+make pip-package
+```
+
+Python用ライブラリをインストール
+```
+pip3 install numpy laspy pygltflib
+```
+
+変換テスト (Las2Meshをclone後)
+```
+cd src
+python las2mesh.py test.las -o test.glb
 ```
